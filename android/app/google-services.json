@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1042736481433",
+    "project_id": "authtest-fc662",
+    "storage_bucket": "authtest-fc662.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1042736481433:android:feb27518c92692826fa408",
+        "android_client_info": {
+          "package_name": "com.example.auth_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1042736481433-usgi0jpkt0rg7qg8ondktel6e23h86af.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCChvCMO5ldmB0OdK7xj7yP-n2SofTxCKI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1042736481433-usgi0jpkt0rg7qg8ondktel6e23h86af.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
