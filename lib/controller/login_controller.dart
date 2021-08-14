@@ -4,52 +4,49 @@ import 'package:get/get.dart';
 enum AccountStatus {
   loggedIn,
   notLoggedIn,
+  registered,
   notRegistered,
+  alreadyRegistered,
   invalidUser,
-  notVerified,
-  unknownError,
 }
 
 class LoginController extends GetxController {
   static final FirebaseAuth _instance = FirebaseAuth.instance;
+  final Rx<AccountStatus> loginNotifier = AccountStatus.notLoggedIn.obs;
 
-  Future<bool> registerWithEmail(
-      {required String email, required String password}) async {
+  Future<void> registerWithEmail({
+    required String email,
+    required String password,
+  }) async {
     try {
       UserCredential userCredential = await _instance
           .createUserWithEmailAndPassword(email: email, password: password);
-      return true;
+      userCredential.user!.sendEmailVerification();
+      loginNotifier.value = AccountStatus.registered;
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
+      if (e.code == 'account-exists-with-different-credential') {
+        loginNotifier.value = AccountStatus.alreadyRegistered;
       }
     } catch (e) {
-      print(e);
+      loginNotifier.value = AccountStatus.notRegistered;
     }
-    return false;
   }
 
-  Future<bool> signInWithEmail(
-      {required String email, required String password}) async {
+  Future<void> signInWithEmail({
+    required String email,
+    required String password,
+  }) async {
     try {
-      UserCredential userCredential = await _instance
-          .signInWithEmailAndPassword(email: email, password: password);
-      return true;
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('User not found.');
-      } else if (e.code == 'wrong-password') {
-        print('Kindly check your password.');
-      }
+      await _instance.signInWithEmailAndPassword(
+          email: email, password: password);
+      loginNotifier.value = AccountStatus.loggedIn;
     } catch (e) {
-      print(e);
+      loginNotifier.value = AccountStatus.invalidUser;
     }
-    return false;
   }
 
   void signOut() async {
     await _instance.signOut();
+    loginNotifier.value = AccountStatus.notLoggedIn;
   }
 }
