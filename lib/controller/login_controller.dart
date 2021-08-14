@@ -19,16 +19,17 @@ class LoginController extends GetxController {
     required String password,
   }) async {
     try {
-      UserCredential userCredential = await _instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-      userCredential.user!.sendEmailVerification();
+      await _instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       loginNotifier.value = AccountStatus.registered;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'account-exists-with-different-credential') {
         loginNotifier.value = AccountStatus.alreadyRegistered;
+      } else {
+        loginNotifier.value = AccountStatus.notRegistered;
       }
-    } catch (e) {
-      loginNotifier.value = AccountStatus.notRegistered;
     }
   }
 
